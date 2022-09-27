@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  web:
+    container_name: server
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./data/:/var/www/html/
+      - ./logs/nginx:/var/log/nginx/
+    links:
+      - php
+    networks:
+      - internal
+  php:
+    container_name: php
+    image: php:8-fpm
+    volumes:
+      - ./data/:/var/www/html/
+      - ./logs/php.log:/var/log/fpm-php.www.log
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
